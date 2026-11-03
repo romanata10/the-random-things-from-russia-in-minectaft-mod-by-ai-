@@ -1,0 +1,21 @@
+{
+  "structures": [
+    {
+      "structure": "rushops:magnit_store",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 10021006,
+    "frequency_reduction_method": "legacy_type_1",
+    "frequency": 1.0,
+    "spacing": 20,
+    "separation": 8,
+    "locate_offset": [
+      0,
+      0,
+      0
+    ]
+  }
+}

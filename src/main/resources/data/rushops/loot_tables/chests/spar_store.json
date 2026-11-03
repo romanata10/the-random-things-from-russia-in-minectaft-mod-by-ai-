@@ -1,0 +1,59 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 3,
+        "max": 6
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "rushops:perfume_bottle",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:shampoo_bottle",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:toothpaste_tube",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:sgushenka_can",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:glazed_cheese_curd",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

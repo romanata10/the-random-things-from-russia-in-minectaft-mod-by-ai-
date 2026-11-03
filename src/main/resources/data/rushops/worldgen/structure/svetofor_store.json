@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": [
+    "minecraft:plains",
+    "minecraft:desert",
+    "minecraft:savanna",
+    "minecraft:badlands",
+    "minecraft:snowy_plains",
+    "minecraft:windswept_gravelly_hills"
+  ],
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "beard_thin",
+  "start_pool": "rushops:svetofor_store/start",
+  "size": 1,
+  "start_height": {
+    "type": "minecraft:constant",
+    "value": {
+      "absolute": 0
+    }
+  },
+  "use_expansion_hack": false,
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 80
+}

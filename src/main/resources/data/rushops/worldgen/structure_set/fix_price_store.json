@@ -1,0 +1,21 @@
+{
+  "structures": [
+    {
+      "structure": "rushops:fix_price_store",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 10021001,
+    "frequency_reduction_method": "legacy_type_1",
+    "frequency": 1.0,
+    "spacing": 22,
+    "separation": 9,
+    "locate_offset": [
+      0,
+      0,
+      0
+    ]
+  }
+}

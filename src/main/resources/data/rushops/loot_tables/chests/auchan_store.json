@@ -1,0 +1,79 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 3,
+        "max": 6
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "rushops:pyaterochka_bread",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:kefir_carton",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:toothpaste_tube",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:dish_soap",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:building_blocks_set",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:shopping_cart_token",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:price_gun",
+          "weight": 3
+        }
+      ]
+    }
+  ]
+}

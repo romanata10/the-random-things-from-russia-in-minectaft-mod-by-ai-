@@ -1,0 +1,21 @@
+{
+  "structures": [
+    {
+      "structure": "rushops:lenta_metro_store",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 10021010,
+    "frequency_reduction_method": "legacy_type_1",
+    "frequency": 1.0,
+    "spacing": 46,
+    "separation": 14,
+    "locate_offset": [
+      0,
+      0,
+      0
+    ]
+  }
+}
