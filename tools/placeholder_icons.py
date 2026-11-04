@@ -194,6 +194,57 @@ def price_gun(name):
     save(name, im)
 
 
+def bag_food(name, body, label=None):
+    im = canvas()
+    d = ImageDraw.Draw(im)
+    d.polygon([(8, 3), (24, 3), (27, 29), (5, 29)], fill=body, outline=OUTLINE)
+    if label:
+        d.rectangle((9, 12, 23, 20), fill=label, outline=OUTLINE)
+    save(name, im)
+
+
+def jar(name, body, lid=(200, 200, 200, 255)):
+    im = canvas()
+    d = ImageDraw.Draw(im)
+    d.rectangle((12, 2, 20, 7), fill=lid, outline=OUTLINE)
+    d.rounded_rectangle((7, 7, 25, 29), radius=4, fill=body, outline=OUTLINE)
+    save(name, im)
+
+
+def box_food(name, body, accent=None):
+    im = canvas()
+    d = ImageDraw.Draw(im)
+    d.rectangle((5, 8, 27, 27), fill=body, outline=OUTLINE)
+    if accent:
+        d.rectangle((5, 8, 27, 13), fill=accent, outline=OUTLINE)
+    save(name, im)
+
+
+def meat_piece(name, body):
+    im = canvas()
+    d = ImageDraw.Draw(im)
+    d.ellipse((5, 9, 27, 24), fill=body, outline=OUTLINE)
+    d.line((9, 13, 23, 20), fill=(240, 240, 240, 255), width=2)
+    save(name, im)
+
+
+bottle("kvass_bottle", (90, 60, 30, 255), cap=(60, 60, 60, 255), label=(200, 170, 110, 255))
+bag_food("kefir_carton", (235, 235, 240, 255), label=(80, 140, 210, 255))
+can("tushonka_can", (190, 160, 80, 255), label=(230, 220, 190, 255))
+can("sgushenka_can", (60, 110, 200, 255), label=(235, 235, 235, 255))
+box_food("glazed_cheese_curd", (235, 220, 190, 255), accent=(120, 70, 40, 255))
+box_food("yarche_cookies", (230, 200, 60, 255), accent=(255, 255, 255, 255))
+bag_food("yarche_crackers", (200, 150, 70, 255), label=(255, 255, 255, 255))
+can("fix_price_soda", (210, 40, 40, 255), label=(255, 255, 255, 255))
+bag_food("pyaterochka_bread", (210, 150, 70, 255), label=(230, 120, 30, 255))
+box_food("instant_noodles", (235, 200, 60, 255), accent=(210, 40, 40, 255))
+bag_food("pelmeni_pack", (225, 225, 230, 255), label=(200, 60, 60, 255))
+jar("mayonnaise_jar", (245, 245, 235, 255))
+bag_food("sunflower_seeds_pack", (210, 160, 60, 255), label=(60, 60, 60, 255))
+bag_food("sushki_pack", (220, 190, 140, 255), label=(180, 60, 60, 255))
+box_food("pryaniki_pack", (200, 140, 90, 255), accent=(220, 60, 60, 255))
+meat_piece("salo_piece", (250, 235, 215, 255))
+
 bottle("shampoo_bottle", (230, 170, 40, 255), cap=(255, 255, 255, 255), label=(255, 220, 150, 255))
 bottle("perfume_bottle", (190, 150, 210, 255), cap=(220, 190, 70, 255), label=(230, 210, 240, 255))
 bottle("bleach_bottle", (230, 230, 140, 255), cap=(255, 255, 255, 255), label=(80, 140, 220, 255))
