@@ -52,6 +52,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:salo_piece",
+          "weight": 5
         }
       ]
     }

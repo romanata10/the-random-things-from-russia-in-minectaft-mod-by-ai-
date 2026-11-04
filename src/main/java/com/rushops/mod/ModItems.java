@@ -31,6 +31,12 @@ public class ModItems {
     public static final RegistryObject<Item> FIX_PRICE_SODA = register("fix_price_soda", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationMod(0.3f).build())));
     public static final RegistryObject<Item> PYATEROCHKA_BREAD = register("pyaterochka_bread", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(5).saturationMod(0.6f).build())));
     public static final RegistryObject<Item> INSTANT_NOODLES = register("instant_noodles", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).build())));
+    public static final RegistryObject<Item> PELMENI_PACK = register("pelmeni_pack", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationMod(0.7f).build())));
+    public static final RegistryObject<Item> MAYONNAISE_JAR = register("mayonnaise_jar", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationMod(0.8f).build())));
+    public static final RegistryObject<Item> SUNFLOWER_SEEDS_PACK = register("sunflower_seeds_pack", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationMod(0.3f).alwaysEat().build())));
+    public static final RegistryObject<Item> SUSHKI_PACK = register("sushki_pack", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationMod(0.3f).build())));
+    public static final RegistryObject<Item> PRYANIKI_PACK = register("pryaniki_pack", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationMod(0.5f).build())));
+    public static final RegistryObject<Item> SALO_PIECE = register("salo_piece", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(5).saturationMod(0.9f).build())));
     public static final RegistryObject<Item> TOY_CAR = register("toy_car", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TEDDY_BEAR = register("teddy_bear", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RUBIKS_CUBE = register("rubiks_cube", () -> new Item(new Item.Properties()));

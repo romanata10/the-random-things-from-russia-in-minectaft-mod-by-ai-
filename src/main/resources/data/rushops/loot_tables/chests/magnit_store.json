@@ -82,6 +82,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:pelmeni_pack",
+          "weight": 5
         }
       ]
     }

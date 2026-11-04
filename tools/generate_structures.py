@@ -56,18 +56,30 @@ def is_perimeter(x, z, w, d):
     return x == 0 or x == w - 1 or z == 0 or z == d - 1
 
 
-def build_shop(shop):
+def build_local(shop):
+    """Builds the core building (walls/roof/door/sign/chest/shelving) in LOCAL
+    coordinates where z=0 is always the front (entrance) wall."""
     w, core_h, d = shop["size"]
-    total_h = core_h + 1  # +1 extra empty layer on top to host the standalone sign
+    pitched = shop.get("pitched_roof", False)
+    rundown = shop.get("rundown", False)
     rnd = random.Random(shop["id"])
-    b = Builder(w, total_h, d)
 
     wall = "minecraft:" + shop["wall"]
     floor = "minecraft:" + shop["floor"]
     roof = "minecraft:" + shop["roof"]
     accent = "minecraft:" + shop["accent"]
     glass = "minecraft:" + shop["glass"]
-    rundown = shop.get("rundown", False)
+    door_wood = shop.get("door", "oak")
+    door_block = f"minecraft:{door_wood}_door"
+
+    if pitched:
+        max_edge = (w - 1) // 2
+        ridge_level = core_h + max_edge
+        total_h = ridge_level + 2
+    else:
+        total_h = core_h + 2
+
+    b = Builder(w, total_h, d)
 
     # floor
     for x in range(w):
@@ -75,7 +87,6 @@ def build_shop(shop):
             b.set(x, 0, z, floor)
 
     # walls
-    wall_top = core_h - 1  # topmost wall row index (roof sits at core_h)
     for y in range(1, core_h):
         for x in range(w):
             for z in range(d):
@@ -85,7 +96,7 @@ def build_shop(shop):
                         block = "minecraft:mossy_cobblestone"
                     b.set(x, y, z, block)
 
-    # window band just below the roof
+    # window band just below the eaves
     window_y = max(1, core_h - 2)
     for x in range(w):
         for z in (0, d - 1):
@@ -96,29 +107,57 @@ def build_shop(shop):
             if 1 < z < d - 2 and z % 2 == 0:
                 b.set(x, window_y, z, glass)
 
-    # doorway on the front wall (z = 0)
-    door_h = min(3, core_h - 2) if core_h > 3 else core_h - 1
-    door_h = max(2, door_h)
+    # entrance door(s) on the front wall (z = 0)
     cx = w // 2
     door_xs = [cx - 1, cx] if w >= 6 else [cx]
     for x in door_xs:
-        for y in range(1, 1 + door_h):
-            b.set(x, y, 0, "minecraft:air")
+        b.set(x, 1, 0, door_block, {
+            "facing": "south", "half": "lower", "hinge": "left", "open": "false", "powered": "false",
+        })
+        b.set(x, 2, 0, door_block, {
+            "facing": "south", "half": "upper", "hinge": "left", "open": "false", "powered": "false",
+        })
+        if core_h >= 5:
+            b.set(x, 3, 0, glass)
 
-    # roof (flat, with a simple parapet trim on the edge)
-    holes = set()
-    if rundown:
-        candidates = [(x, z) for x in range(1, w - 1) for z in range(1, d - 1)]
-        rnd.shuffle(candidates)
-        holes = set(candidates[: max(1, len(candidates) // 12)])
-    for x in range(w):
-        for z in range(d):
-            if (x, z) in holes:
-                continue
-            if is_perimeter(x, z, w, d):
-                b.set(x, core_h, z, accent)
+    # roof
+    if pitched:
+        for x in range(w):
+            edge_dist = min(x, w - 1 - x)
+            level = core_h + edge_dist
+            if edge_dist == max_edge:
+                # ridge cap, full width run down the whole building
+                for z in range(d):
+                    b.set(x, level, z, roof)
             else:
-                b.set(x, core_h, z, roof)
+                facing = "east" if x < cx else "west"
+                for z in range(d):
+                    b.set(x, level, z, roof_stairs_id(shop["roof"]), {
+                        "facing": facing, "half": "bottom", "shape": "straight", "waterlogged": "false",
+                    })
+                # close the triangular gable ends at the front/back walls
+                for z in (0, d - 1):
+                    for y in range(core_h, level):
+                        block = wall
+                        if rundown and rnd.random() < 0.18:
+                            block = "minecraft:mossy_cobblestone"
+                        b.set(x, y, z, block)
+        sign_x, sign_y = cx, ridge_level + 1
+    else:
+        holes = set()
+        if rundown:
+            candidates = [(x, z) for x in range(1, w - 1) for z in range(1, d - 1)]
+            rnd.shuffle(candidates)
+            holes = set(candidates[: max(1, len(candidates) // 12)])
+        for x in range(w):
+            for z in range(d):
+                if (x, z) in holes:
+                    continue
+                if is_perimeter(x, z, w, d):
+                    b.set(x, core_h, z, accent)
+                else:
+                    b.set(x, core_h, z, roof)
+        sign_x, sign_y = cx, core_h + 1
 
     # interior shelving
     interior_ok = w >= 7 and d >= 6
@@ -149,9 +188,9 @@ def build_shop(shop):
         b.set(cxp, cyp, czp, "minecraft:chest", {"facing": "south"},
               {"id": "minecraft:chest", "LootTable": loot_table, "LootTableSeed": 0})
 
-    # sign standing on the roof parapet above the entrance
+    # sign on the roof peak / parapet above the entrance
     sign_text = shop["ru"][:15]
-    b.set(cx, core_h + 1, 0, "minecraft:oak_sign", {"rotation": "8", "waterlogged": "false"},
+    b.set(sign_x, sign_y, 0, "minecraft:oak_sign", {"rotation": "8", "waterlogged": "false"},
           {
               "id": "minecraft:sign",
               "front_text": {
@@ -167,7 +206,83 @@ def build_shop(shop):
               "is_waxed": 0,
           })
 
+    # Explicitly carve out air for every empty interior/attic cell so the
+    # building reads as hollow even when it overlaps hills, trees or caves -
+    # without this, unset cells are simply left untouched by the structure
+    # template and whatever terrain was already there would stay in place.
+    for y in range(1, core_h):
+        for x in range(w):
+            for z in range(d):
+                if b.get(x, y, z) is None:
+                    b.set(x, y, z, "minecraft:air")
+    if pitched:
+        for x in range(w):
+            edge_dist = min(x, w - 1 - x)
+            level = core_h + edge_dist
+            for y in range(core_h, level):
+                for z in range(1, d - 1):
+                    if b.get(x, y, z) is None:
+                        b.set(x, y, z, "minecraft:air")
+
     return b, (w, total_h, d)
+
+
+def roof_stairs_id(roof_block_name):
+    # Concrete/terracotta don't have stair variants, so pick the closest-looking
+    # stair block that actually exists in vanilla for the roof silhouette.
+    mapping = {
+        "red_concrete": "minecraft:brick_stairs",
+        "green_concrete": "minecraft:dark_oak_stairs",
+        "blue_concrete": "minecraft:dark_prismarine_stairs",
+        "black_concrete": "minecraft:blackstone_stairs",
+        "white_concrete": "minecraft:quartz_stairs",
+        "yellow_concrete": "minecraft:dark_oak_stairs",
+        "orange_concrete": "minecraft:dark_oak_stairs",
+        "purple_concrete": "minecraft:purpur_stairs",
+        "red_terracotta": "minecraft:cobblestone_stairs",
+        "gray_concrete": "minecraft:andesite_stairs",
+    }
+    return mapping.get(roof_block_name, "minecraft:stone_brick_stairs")
+
+
+def apply_front_apron(local_builder, size, shop):
+    w, total_h, d = size
+    margin = shop.get("front_margin", 0)
+    final = Builder(w, total_h, d + margin)
+
+    for (x, y, z), (block_id, props, nbt) in local_builder.blocks.items():
+        final.set(x, y, z + margin, block_id, props, nbt)
+
+    apron = shop.get("apron")
+    if apron and margin > 0:
+        apron_block = "minecraft:" + apron
+        for x in range(w):
+            for z in range(margin):
+                final.set(x, 0, z, apron_block)
+                for y in (1, 2, 3):
+                    final.set(x, y, z, "minecraft:air")
+
+        stripe = shop.get("apron_stripe")
+        if stripe and margin >= 3:
+            stripe_block = "minecraft:" + stripe
+            for x in range(0, w, 3):
+                for z in range(1, margin - 1):
+                    final.set(x, 0, z, stripe_block)
+
+        if shop.get("lamp_posts") and margin >= 2:
+            lamp_z = max(0, margin - 2)
+            for lx in (0, w - 1):
+                final.set(lx, 1, lamp_z, "minecraft:cobblestone_wall")
+                final.set(lx, 2, lamp_z, "minecraft:glowstone")
+
+        if shop.get("bushes") and margin >= 1:
+            plant = "minecraft:dead_bush" if shop.get("rundown") else "minecraft:potted_red_tulip"
+            bush_z = margin - 1
+            for bx in (1, w - 2):
+                if 0 < bx < w - 1:
+                    final.set(bx, 1, bush_z, plant)
+
+    return final, (w, total_h, d + margin)
 
 
 def to_nbt(builder, size):
@@ -311,8 +426,9 @@ def write_loot_table(shop):
 
 
 for shop in STRUCTURES:
-    builder, size = build_shop(shop)
-    nbt_root = to_nbt(builder, size)
+    local_builder, local_size = build_local(shop)
+    final_builder, final_size = apply_front_apron(local_builder, local_size, shop)
+    nbt_root = to_nbt(final_builder, final_size)
     nbt_file = File(nbt_root, gzipped=True, root_name="")
     nbt_file.save(os.path.join(STRUCT_NBT_DIR, shop["id"] + ".nbt"))
 

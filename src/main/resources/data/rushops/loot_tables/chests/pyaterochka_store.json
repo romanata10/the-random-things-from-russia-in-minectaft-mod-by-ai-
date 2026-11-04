@@ -82,6 +82,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "rushops:mayonnaise_jar",
+          "weight": 5
         }
       ]
     }
